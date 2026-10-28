@@ -23,6 +23,8 @@ export type SkillItem = {
   icon: string;
   /** Custom icon image, used when no built-in icon is selected. */
   iconUrl: string;
+  /** Heading the skill is listed under on the site, e.g. "Frontend". */
+  group: string;
   visible: boolean;
 };
 

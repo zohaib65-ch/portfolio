@@ -70,6 +70,11 @@ export default async function SkillsListPage() {
                   </div>
                   <p className="flex items-center gap-2 font-medium">
                     <span className="truncate">{item.name}</span>
+                    {item.group && (
+                      <span className="text-xs font-normal text-muted-foreground">
+                        {item.group}
+                      </span>
+                    )}
                     {!item.visible && <Badge variant="secondary">Hidden</Badge>}
                   </p>
                 </div>

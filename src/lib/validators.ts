@@ -52,6 +52,7 @@ export const skillSchema = z.object({
       "Unknown icon"
     ),
   iconUrl: optionalUrl,
+  group: text(40),
   visible: z.boolean(),
 });
 

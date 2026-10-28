@@ -12,41 +12,68 @@ type Skill = {
   /** Built-in icon component. Takes priority over iconUrl. */
   icon?: ComponentType<SVGProps<SVGSVGElement>>;
   iconUrl?: string;
+  /** Heading the skill is listed under on the site. */
+  group?: string;
 };
 
 const brandIcon = (slug: string) => `https://cdn.simpleicons.org/${slug}`;
 
-// Ordered as in the CV: frontend, backend, databases, tools, AI.
+const inGroup = (group: string, items: Skill[]): Skill[] =>
+  items.map((item) => ({ ...item, group }));
+
+// Everything from the CV's "Skills & Technologies", in the CV's order and under
+// its headings.
 const skills: Skill[] = [
-  { name: "HTML5", iconUrl: brandIcon("html5") },
-  { name: "CSS3" },
-  { name: "Tailwind CSS", iconUrl: brandIcon("tailwindcss") },
-  { name: "JavaScript", iconUrl: brandIcon("javascript") },
-  { name: "TypeScript", icon: Typescript },
-  { name: "React.js", icon: ReactLight },
-  { name: "Vue.js", iconUrl: brandIcon("vuedotjs") },
-  { name: "Node.js", icon: Nodejs },
-  { name: "Express.js" },
-  { name: "REST APIs" },
-  { name: "Socket.IO" },
-  { name: "WebSockets" },
-  { name: "MongoDB", iconUrl: brandIcon("mongodb") },
-  { name: "PostgreSQL", icon: Postgresql },
-  { name: "Firebase", iconUrl: brandIcon("firebase") },
-  { name: "Git", iconUrl: brandIcon("git") },
-  { name: "GitHub" },
-  { name: "Postman", iconUrl: brandIcon("postman") },
-  { name: "Jira", iconUrl: brandIcon("jira") },
-  { name: "Trello", iconUrl: brandIcon("trello") },
-  { name: "Vercel" },
-  { name: "Docker", icon: Docker },
-  { name: "CI/CD" },
-  { name: "LangChain", iconUrl: brandIcon("langchain") },
-  { name: "LangGraph", iconUrl: brandIcon("langgraph") },
-  { name: "RAG Systems" },
-  { name: "AI Agents" },
-  { name: "Vector Search" },
-  { name: "LLM Integration" },
+  ...inGroup("Frontend", [
+    { name: "HTML5", iconUrl: brandIcon("html5") },
+    { name: "CSS3" },
+    { name: "Tailwind CSS", iconUrl: brandIcon("tailwindcss") },
+    { name: "JavaScript", iconUrl: brandIcon("javascript") },
+    { name: "TypeScript", icon: Typescript },
+    { name: "React.js", icon: ReactLight },
+    { name: "Vue.js", iconUrl: brandIcon("vuedotjs") },
+    { name: "Responsive UI Development" },
+  ]),
+  ...inGroup("Backend", [
+    { name: "Node.js", icon: Nodejs },
+    { name: "Express.js" },
+    { name: "REST APIs" },
+    { name: "Socket.IO" },
+    { name: "WebSockets" },
+    { name: "Authentication" },
+    { name: "Third-party API Integration" },
+  ]),
+  ...inGroup("Databases", [
+    { name: "MongoDB", iconUrl: brandIcon("mongodb") },
+    { name: "PostgreSQL", icon: Postgresql },
+    { name: "Firebase", iconUrl: brandIcon("firebase") },
+  ]),
+  ...inGroup("Tools & Platforms", [
+    { name: "Git", iconUrl: brandIcon("git") },
+    { name: "GitHub" },
+    { name: "Postman", iconUrl: brandIcon("postman") },
+    { name: "Jira", iconUrl: brandIcon("jira") },
+    { name: "Trello", iconUrl: brandIcon("trello") },
+    { name: "Vercel" },
+    { name: "Docker", icon: Docker },
+    { name: "CI/CD" },
+  ]),
+  ...inGroup("Development", [
+    { name: "MERN Stack" },
+    { name: "Real-time Applications" },
+    { name: "SaaS Development" },
+    { name: "API Integration" },
+    { name: "Automation Workflows" },
+    { name: "Clean & Maintainable Code" },
+  ]),
+  ...inGroup("AI & LLMs", [
+    { name: "LangChain", iconUrl: brandIcon("langchain") },
+    { name: "LangGraph", iconUrl: brandIcon("langgraph") },
+    { name: "RAG Systems" },
+    { name: "AI Agents" },
+    { name: "Vector Search" },
+    { name: "LLM Integration" },
+  ]),
 ];
 
 export const DATA = {
@@ -133,7 +160,7 @@ export const DATA = {
     {
       school: "University of Sahiwal",
       href: "https://www.uosahiwal.edu.pk",
-      degree: "BS Software Engineering (CGPA 3.35)",
+      degree: "Bachelor of Science in Software Engineering · CGPA 3.35",
       logoUrl: "/sahiwal.png",
       start: "2020",
       end: "2024",
@@ -264,6 +291,60 @@ export const DATA = {
         },
       ],
       image: "/projects/my-digital-twin.jpg",
+      video: "",
+    },
+    {
+      title: "DocuChat AI",
+      href: "https://docu-chat-ai-ochre.vercel.app",
+      dates: "",
+      active: true,
+      description:
+        "AI-powered document Q&A system built with LangChain and RAG, using retrieval and vector search to generate context-aware answers from document content.",
+      technologies: [],
+      links: [
+        {
+          type: "Website",
+          href: "https://docu-chat-ai-ochre.vercel.app",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/projects/docuchat-ai.jpg",
+      video: "",
+    },
+    {
+      title: "MeatsZoo",
+      href: "https://www.meatszoo.com",
+      dates: "",
+      active: true,
+      description:
+        "Commercial web application work focused on responsive interfaces, product flows and reliable frontend/backend integration.",
+      technologies: [],
+      links: [
+        {
+          type: "Website",
+          href: "https://www.meatszoo.com",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/projects/meatszoo.jpg",
+      video: "",
+    },
+    {
+      title: "Start2Write",
+      href: "https://www.start2write.com",
+      dates: "",
+      active: true,
+      description:
+        "Content-focused web platform built around a streamlined user experience and modern application workflows.",
+      technologies: [],
+      links: [
+        {
+          type: "Website",
+          href: "https://www.start2write.com",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/projects/start2write.jpg",
       video: "",
     },
   ],

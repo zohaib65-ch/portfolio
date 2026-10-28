@@ -43,6 +43,7 @@ function toSkill(doc: Lean<SkillDoc>): SkillItem {
     name: doc.name,
     icon: doc.icon ?? "",
     iconUrl: doc.iconUrl ?? "",
+    group: doc.group ?? "",
     visible: doc.visible ?? true,
   };
 }
@@ -88,6 +89,7 @@ function templateSkills(): Omit<SkillItem, "id">[] {
     name: skill.name,
     icon: skill.icon ? findSkillIconKey(skill.icon) : "",
     iconUrl: skill.iconUrl ?? "",
+    group: skill.group ?? "",
     visible: true,
   }));
 }
@@ -165,3 +167,13 @@ export const skillRepo = createRepository(Skill, toSkill, () =>
 export const projectRepo = createRepository(Project, toProject, () =>
   withStaticIds<ProjectItem>(templateProjects())
 );
+
+/** Existing skill group names, in display order. For suggestions in the admin form. */
+export async function listSkillGroups(): Promise<string[]> {
+  try {
+    const skills = await skillRepo.all();
+    return [...new Set(skills.map((skill) => skill.group).filter(Boolean))];
+  } catch {
+    return [];
+  }
+}

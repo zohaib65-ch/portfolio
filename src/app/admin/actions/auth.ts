@@ -49,7 +49,7 @@ export async function loginAction(
 
   if (!adminId) return { error: "Invalid email or password.", email };
   await startSession(adminId);
-  redirect("/admin");
+  redirect("/admin/work");
 }
 
 export async function logoutAction() {

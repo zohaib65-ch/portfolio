@@ -16,7 +16,7 @@ async function hasAdminAccount() {
 
 export default async function LoginPage() {
   if (await isAuthenticated()) {
-    redirect("/admin");
+    redirect("/admin/work");
   }
 
   const problems = getAuthConfigProblems();

@@ -66,6 +66,7 @@ export default function WorkSection({ work: items }: { work: WorkItem[] }) {
                   </div>
                   <div className="font-sans text-sm text-muted-foreground">
                     {work.title}
+                    {work.location ? ` · ${work.location}` : ""}
                   </div>
                 </div>
               </div>

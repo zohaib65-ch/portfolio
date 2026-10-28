@@ -4,7 +4,7 @@ import { DbError } from "@/components/admin/db-error";
 import { PageHeader } from "@/components/admin/page-header";
 import { SkillForm } from "@/components/admin/skill-form";
 import { requireAdmin } from "@/lib/auth";
-import { skillRepo } from "@/lib/content";
+import { listSkillGroups, skillRepo } from "@/lib/content";
 import type { SkillItem } from "@/lib/types";
 
 export default async function EditSkillPage({
@@ -27,7 +27,11 @@ export default async function EditSkillPage({
   return (
     <>
       <PageHeader title={`Edit ${item.name}`} />
-      <SkillForm action={saveSkill.bind(null, item.id)} initial={item} />
+      <SkillForm
+        action={saveSkill.bind(null, item.id)}
+        initial={item}
+        groups={await listSkillGroups()}
+      />
     </>
   );
 }

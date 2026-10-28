@@ -13,14 +13,17 @@ import type { FormState } from "@/lib/form-state";
 import { SKILL_ICONS, SKILL_ICON_KEYS } from "@/lib/skill-icons";
 import type { SkillItem } from "@/lib/types";
 
-type TextKey = "name" | "icon" | "iconUrl";
+type TextKey = "name" | "icon" | "iconUrl" | "group";
 
 export function SkillForm({
   action,
   initial,
+  groups = [],
 }: {
   action: (prev: FormState, formData: FormData) => Promise<FormState>;
   initial?: SkillItem;
+  /** Existing group names, offered as suggestions. */
+  groups?: string[];
 }) {
   const [state, formAction] = useActionState(action, {});
   const errors = state.fieldErrors ?? {};
@@ -45,6 +48,28 @@ export function SkillForm({
           autoComplete="off"
           required
         />
+      </Field>
+
+      <Field
+        label="Group"
+        htmlFor="group"
+        error={errors.group}
+        hint="Optional heading this skill is listed under on the site, e.g. Frontend or Databases."
+      >
+        <Input
+          id="group"
+          name="group"
+          list="skill-groups"
+          defaultValue={value("group")}
+          aria-invalid={Boolean(errors.group) || undefined}
+          aria-describedby={errors.group ? "group-error" : undefined}
+          autoComplete="off"
+        />
+        <datalist id="skill-groups">
+          {groups.map((group) => (
+            <option key={group} value={group} />
+          ))}
+        </datalist>
       </Field>
 
       <Field label="Icon" htmlFor="icon" error={errors.icon}>

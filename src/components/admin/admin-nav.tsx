@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Briefcase,
-  FolderKanban,
-  LayoutDashboard,
-  Sparkles,
-} from "lucide-react";
+import { Briefcase, FolderKanban, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/work", label: "Work Experience", icon: Briefcase },
   { href: "/admin/skills", label: "Skills", icon: Sparkles },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
@@ -22,10 +16,8 @@ export function AdminNav() {
 
   return (
     <nav aria-label="Admin" className="flex gap-1 overflow-x-auto md:flex-col">
-      {ITEMS.map(({ href, label, icon: Icon, exact }) => {
-        const active = exact
-          ? pathname === href
-          : pathname === href || pathname.startsWith(`${href}/`);
+      {ITEMS.map(({ href, label, icon: Icon }) => {
+        const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             key={href}

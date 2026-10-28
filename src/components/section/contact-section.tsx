@@ -1,3 +1,4 @@
+import { MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { DATA } from "@/data/resume";
@@ -33,6 +34,24 @@ export default function ContactSection() {
           </Link>{" "}
           and I&apos;ll get back to you.
         </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+          <Link
+            href={`tel:${DATA.contact.tel.replace(/\s/g, "")}`}
+            className="flex items-center gap-2 transition-colors hover:text-foreground"
+          >
+            <Phone className="size-4" aria-hidden />
+            {DATA.contact.tel}
+          </Link>
+          <Link
+            href={DATA.locationLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 transition-colors hover:text-foreground"
+          >
+            <MapPin className="size-4" aria-hidden />
+            {DATA.location}
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -140,6 +140,7 @@ export async function saveSkill(
     name: str(formData, "name"),
     icon: str(formData, "icon"),
     iconUrl: str(formData, "iconUrl"),
+    group: str(formData, "group"),
     visible: formData.has("visible"),
   };
   const parsed = skillSchema.safeParse(values);

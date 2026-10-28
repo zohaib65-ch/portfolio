@@ -26,7 +26,7 @@ export default async function PanelLayout({
           <SessionLinks />
         </div>
       </aside>
-      <main className="w-full max-w-4xl p-6 md:p-10">{children}</main>
+      <main className="p-6 md:p-10">{children}</main>
     </div>
   );
 }
