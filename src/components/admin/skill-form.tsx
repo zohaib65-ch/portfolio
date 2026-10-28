@@ -1,17 +1,19 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Field } from "@/components/admin/field";
 import {
   FormError,
   FormFooter,
   VisibleCheckbox,
 } from "@/components/admin/form-footer";
+import { FormSelect } from "@/components/admin/form-select";
+import { GroupField } from "@/components/admin/group-field";
 import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import type { FormState } from "@/lib/form-state";
 import { SKILL_ICONS, SKILL_ICON_KEYS } from "@/lib/skill-icons";
-import type { SkillItem } from "@/lib/types";
+import type { SkillGroupOption, SkillItem } from "@/lib/types";
 
 type TextKey = "name" | "icon" | "iconUrl" | "group";
 
@@ -22,14 +24,15 @@ export function SkillForm({
 }: {
   action: (prev: FormState, formData: FormData) => Promise<FormState>;
   initial?: SkillItem;
-  /** Existing group names, offered as suggestions. */
-  groups?: string[];
+  /** Groups offered in the dropdown. */
+  groups?: SkillGroupOption[];
 }) {
   const [state, formAction] = useActionState(action, {});
   const errors = state.fieldErrors ?? {};
 
   const value = (key: TextKey) =>
     (state.values?.[key] as string | undefined) ?? initial?.[key] ?? "";
+  const [icon, setIcon] = useState(value("icon"));
   const visible = state.values
     ? Boolean(state.values.visible)
     : (initial?.visible ?? true);
@@ -50,42 +53,30 @@ export function SkillForm({
         />
       </Field>
 
-      <Field
-        label="Group"
-        htmlFor="group"
+      <GroupField
+        name="group"
+        initialValue={value("group")}
+        groups={groups}
         error={errors.group}
-        hint="Optional heading this skill is listed under on the site, e.g. Frontend or Databases."
-      >
-        <Input
-          id="group"
-          name="group"
-          list="skill-groups"
-          defaultValue={value("group")}
-          aria-invalid={Boolean(errors.group) || undefined}
-          aria-describedby={errors.group ? "group-error" : undefined}
-          autoComplete="off"
-        />
-        <datalist id="skill-groups">
-          {groups.map((group) => (
-            <option key={group} value={group} />
-          ))}
-        </datalist>
-      </Field>
+      />
 
       <Field label="Icon" htmlFor="icon" error={errors.icon}>
-        <select
+        <FormSelect
           id="icon"
           name="icon"
-          defaultValue={value("icon")}
-          className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        >
-          <option value="">No icon</option>
-          {SKILL_ICON_KEYS.map((key) => (
-            <option key={key} value={key}>
-              {SKILL_ICONS[key].label}
-            </option>
-          ))}
-        </select>
+          value={icon}
+          onValueChange={setIcon}
+          noneLabel="No icon"
+          invalid={Boolean(errors.icon)}
+          options={SKILL_ICON_KEYS.map((key) => {
+            const Icon = SKILL_ICONS[key].component;
+            return {
+              value: key,
+              label: SKILL_ICONS[key].label,
+              icon: <Icon className="size-4 shrink-0" />,
+            };
+          })}
+        />
       </Field>
 
       <ImageField

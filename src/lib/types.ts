@@ -44,4 +44,11 @@ export type ProjectItem = {
   visible: boolean;
 };
 
+/** A group offered in the skill form's dropdown. */
+export type SkillGroupOption = {
+  name: string;
+  /** How many skills (hidden ones too) are listed under it. */
+  count: number;
+};
+
 export type ResourceKey = "work" | "skills" | "projects";

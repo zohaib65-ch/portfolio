@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, FolderKanban, Sparkles } from "lucide-react";
+import { Briefcase, FolderKanban, Sparkles, Tags } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { href: "/admin/work", label: "Work Experience", icon: Briefcase },
   { href: "/admin/skills", label: "Skills", icon: Sparkles },
+  { href: "/admin/groups", label: "Skill Groups", icon: Tags },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
 ];
 

@@ -3,7 +3,7 @@ import { DATA } from "@/data/resume";
 import { connectDb, isDbConfigured } from "@/lib/db";
 import { isObjectId } from "@/lib/ids";
 import { findSkillIconKey } from "@/lib/skill-icons";
-import type { ProjectItem, SkillItem, WorkItem } from "@/lib/types";
+import type { ProjectItem, SkillGroupOption, SkillItem, WorkItem } from "@/lib/types";
 import {
   Project,
   Skill,
@@ -12,6 +12,7 @@ import {
 } from "@/models";
 import type { ProjectDoc } from "@/models/project";
 import type { SkillDoc } from "@/models/skill";
+import { SkillGroup } from "@/models/skill-group";
 import type { WorkExperienceDoc } from "@/models/work-experience";
 
 type Lean<T> = T & { _id: Types.ObjectId };
@@ -168,11 +169,37 @@ export const projectRepo = createRepository(Project, toProject, () =>
   withStaticIds<ProjectItem>(templateProjects())
 );
 
-/** Existing skill group names, in display order. For suggestions in the admin form. */
-export async function listSkillGroups(): Promise<string[]> {
+/**
+ * Every skill group: the ones skills use (in the order they appear on the site)
+ * with how many skills each has, then groups added in the admin that no skill
+ * uses yet. Throws if MongoDB can't be reached.
+ */
+export async function loadSkillGroups(): Promise<SkillGroupOption[]> {
+  const skills = await skillRepo.all();
+  const saved = await SkillGroup.find().sort({ createdAt: 1 }).lean();
+
+  const groups = new Map<string, SkillGroupOption>(); // keyed case-insensitively
+  for (const { group } of skills) {
+    if (!group) continue;
+    const found = groups.get(group.toLowerCase());
+    if (found) {
+      found.count += 1;
+    } else {
+      groups.set(group.toLowerCase(), { name: group, count: 1 });
+    }
+  }
+  for (const { name } of saved) {
+    if (!groups.has(name.toLowerCase())) {
+      groups.set(name.toLowerCase(), { name, count: 0 });
+    }
+  }
+  return [...groups.values()];
+}
+
+/** Like loadSkillGroups, but an empty list instead of an error (for form dropdowns). */
+export async function listSkillGroups(): Promise<SkillGroupOption[]> {
   try {
-    const skills = await skillRepo.all();
-    return [...new Set(skills.map((skill) => skill.group).filter(Boolean))];
+    return await loadSkillGroups();
   } catch {
     return [];
   }
