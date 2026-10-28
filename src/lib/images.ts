@@ -1,3 +1,4 @@
+import { destroyFromCloudinary, ownedPublicId } from "@/lib/cloudinary";
 import { connectDb } from "@/lib/db";
 import { ACCEPTED_IMAGE_TYPES, IMAGE_URL_PREFIX } from "@/lib/image-config";
 import { isObjectId } from "@/lib/ids";
@@ -25,25 +26,30 @@ export function detectImageType(bytes: Uint8Array): ImageType | null {
   return null;
 }
 
-/** The stored-image id behind a `/api/images/<id>` URL, or null for any other URL. */
-export function imageIdFromUrl(url: unknown) {
+/** Legacy: the id of an image stored in MongoDB, from a `/api/images/<id>` URL. */
+function legacyImageId(url: unknown) {
   if (typeof url !== "string" || !url.startsWith(IMAGE_URL_PREFIX)) return null;
   const id = url.slice(IMAGE_URL_PREFIX.length);
   return isObjectId(id) ? id : null;
 }
 
-/** Marks the uploads used by a just-saved entry as permanent. */
-export async function confirmImages(urls: unknown[]) {
-  const ids = urls.map(imageIdFromUrl).filter((id): id is string => id !== null);
-  if (ids.length === 0) return;
-  await connectDb();
-  await StoredImage.updateMany({ _id: { $in: ids } }, { $set: { pending: false } });
-}
-
-/** Deletes uploaded images that no entry uses any more. Other URLs are ignored. */
+/**
+ * Deletes images an entry no longer uses. Only images this admin uploaded are
+ * touched (Cloudinary uploads in our folder, plus legacy MongoDB images); any
+ * other URL, such as a brand icon or a file in /public, is left alone.
+ */
 export async function deleteImages(urls: unknown[]) {
-  const ids = urls.map(imageIdFromUrl).filter((id): id is string => id !== null);
-  if (ids.length === 0) return;
-  await connectDb();
-  await StoredImage.deleteMany({ _id: { $in: ids } });
+  const legacyIds = urls.map(legacyImageId).filter((id): id is string => id !== null);
+  if (legacyIds.length > 0) {
+    await connectDb();
+    await StoredImage.deleteMany({ _id: { $in: legacyIds } });
+  }
+
+  const publicIds = urls.map(ownedPublicId).filter((id): id is string => id !== null);
+  const results = await Promise.allSettled(publicIds.map(destroyFromCloudinary));
+  for (const result of results) {
+    if (result.status === "rejected") {
+      console.error("[images] couldn't delete from Cloudinary", result.reason);
+    }
+  }
 }

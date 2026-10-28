@@ -55,7 +55,7 @@ Notes:
 - Edits show up on the site immediately; direct database edits are picked up within a minute.
 - Deleting an admin from the `admins` collection signs them out straight away.
 - On Vercel, add `MONGODB_URI` and `AUTH_SECRET` to the project and allow Vercel's IPs in Atlas network access.
-- Logos, project images and skill icons are uploaded from the admin (PNG, JPEG, WEBP or GIF, up to 2 MB) and stored in MongoDB. Project videos are still a link.
+- Logos, project images and skill icons are uploaded from the admin (PNG, JPEG, WEBP or GIF, up to 2 MB) to Cloudinary; MongoDB only stores the image URL. Set `CLOUDINARY_URL` (see `.env.example`). Project videos are still a link.
 
 # License
 

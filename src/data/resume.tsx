@@ -1,16 +1,8 @@
-import type { ComponentType, SVGProps } from "react";
 import { Icons } from "@/components/icons";
 import { HomeIcon } from "lucide-react";
-import { ReactLight } from "@/components/ui/svgs/reactLight";
-import { Typescript } from "@/components/ui/svgs/typescript";
-import { Nodejs } from "@/components/ui/svgs/nodejs";
-import { Postgresql } from "@/components/ui/svgs/postgresql";
-import { Docker } from "@/components/ui/svgs/docker";
 
 type Skill = {
   name: string;
-  /** Built-in icon component. Takes priority over iconUrl. */
-  icon?: ComponentType<SVGProps<SVGSVGElement>>;
   iconUrl?: string;
   /** Heading the skill is listed under on the site. */
   group?: string;
@@ -29,13 +21,13 @@ const skills: Skill[] = [
     { name: "CSS3" },
     { name: "Tailwind CSS", iconUrl: brandIcon("tailwindcss") },
     { name: "JavaScript", iconUrl: brandIcon("javascript") },
-    { name: "TypeScript", icon: Typescript },
-    { name: "React.js", icon: ReactLight },
+    { name: "TypeScript", iconUrl: brandIcon("typescript") },
+    { name: "React.js", iconUrl: brandIcon("react") },
     { name: "Vue.js", iconUrl: brandIcon("vuedotjs") },
     { name: "Responsive UI Development" },
   ]),
   ...inGroup("Backend", [
-    { name: "Node.js", icon: Nodejs },
+    { name: "Node.js", iconUrl: brandIcon("nodedotjs") },
     { name: "Express.js" },
     { name: "REST APIs" },
     { name: "Socket.IO" },
@@ -45,7 +37,7 @@ const skills: Skill[] = [
   ]),
   ...inGroup("Databases", [
     { name: "MongoDB", iconUrl: brandIcon("mongodb") },
-    { name: "PostgreSQL", icon: Postgresql },
+    { name: "PostgreSQL", iconUrl: brandIcon("postgresql") },
     { name: "Firebase", iconUrl: brandIcon("firebase") },
   ]),
   ...inGroup("Tools & Platforms", [
@@ -55,7 +47,7 @@ const skills: Skill[] = [
     { name: "Jira", iconUrl: brandIcon("jira") },
     { name: "Trello", iconUrl: brandIcon("trello") },
     { name: "Vercel" },
-    { name: "Docker", icon: Docker },
+    { name: "Docker", iconUrl: brandIcon("docker") },
     { name: "CI/CD" },
   ]),
   ...inGroup("Development", [

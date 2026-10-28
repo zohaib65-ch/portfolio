@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import { connectDb } from "@/lib/db";
 import type { ActionResult, FormState } from "@/lib/form-state";
 import { isObjectId } from "@/lib/ids";
-import { confirmImages, deleteImages } from "@/lib/images";
+import { deleteImages } from "@/lib/images";
 import type { ResourceKey } from "@/lib/types";
 import {
   fieldErrors,
@@ -47,8 +47,8 @@ const IMAGE_FIELDS: Record<ResourceKey, string[]> = {
 };
 
 /**
- * After a save: make this entry's uploads permanent and delete the ones it no
- * longer uses (replaced or removed). Never fails the save itself.
+ * After a save: delete the uploaded images this entry no longer uses (replaced
+ * or removed). Never fails the save itself.
  */
 async function syncImages(
   resource: ResourceKey,
@@ -57,7 +57,6 @@ async function syncImages(
 ) {
   try {
     const fields = IMAGE_FIELDS[resource];
-    await confirmImages(fields.map((field) => after[field]));
     await deleteImages(
       fields
         .map((field) => before?.get(field))
@@ -138,7 +137,6 @@ export async function saveSkill(
 
   const values = {
     name: str(formData, "name"),
-    icon: str(formData, "icon"),
     iconUrl: str(formData, "iconUrl"),
     group: str(formData, "group"),
     visible: formData.has("visible"),

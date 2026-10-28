@@ -3,7 +3,7 @@
 
 import { ImagePlus, Loader2, Trash2 } from "lucide-react";
 import { useRef, useState, useTransition, type ChangeEvent } from "react";
-import { uploadImage } from "@/app/admin/actions/images";
+import { discardImage, uploadImage } from "@/app/admin/actions/images";
 import { Field } from "@/components/admin/field";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,14 @@ export function ImageField({
   const [problem, setProblem] = useState<string | null>(null);
   const [uploading, startUpload] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  // Uploads made in this form that haven't been saved yet. If one is replaced
+  // or removed before saving, it's deleted from storage right away.
+  const unsaved = useRef(new Set<string>());
   const inputId = `${name}-file`;
+
+  function dropIfUnsaved(url: string) {
+    if (unsaved.current.delete(url)) void discardImage(url);
+  }
 
   function onPick(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -59,6 +66,8 @@ export function ImageField({
       body.set("file", file);
       const result = await uploadImage(body);
       if (result.url) {
+        dropIfUnsaved(value);
+        unsaved.current.add(result.url);
         setValue(result.url);
       } else {
         setProblem(result.error ?? "Upload failed.");
@@ -122,6 +131,7 @@ export function ImageField({
                 size="sm"
                 disabled={uploading}
                 onClick={() => {
+                  dropIfUnsaved(value);
                   setValue("");
                   setProblem(null);
                 }}

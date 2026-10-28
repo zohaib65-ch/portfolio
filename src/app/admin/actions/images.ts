@@ -1,14 +1,14 @@
 "use server";
 
 import { requireAdmin } from "@/lib/auth";
-import { connectDb } from "@/lib/db";
 import {
-  ACCEPTED_IMAGE_TYPES,
-  IMAGE_URL_PREFIX,
-  MAX_IMAGE_BYTES,
-} from "@/lib/image-config";
+  destroyFromCloudinary,
+  isCloudinaryConfigured,
+  ownedPublicId,
+  uploadToCloudinary,
+} from "@/lib/cloudinary";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/image-config";
 import { detectImageType } from "@/lib/images";
-import { StoredImage } from "@/models/stored-image";
 
 export type UploadResult = { url?: string; error?: string };
 
@@ -33,16 +33,34 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     return { error: `Unsupported file. Use ${TYPE_LABELS}.` };
   }
 
+  if (!isCloudinaryConfigured()) {
+    return {
+      error:
+        "Image uploads aren't set up yet. Add CLOUDINARY_URL to .env (see .env.example) and restart the server.",
+    };
+  }
+
   try {
-    await connectDb();
-    const stored = await StoredImage.create({
-      data: Buffer.from(bytes),
-      contentType,
-      size: bytes.length,
-    });
-    return { url: `${IMAGE_URL_PREFIX}${stored.id}` };
+    return { url: await uploadToCloudinary(bytes, contentType) };
   } catch (error) {
     console.error("[admin] image upload failed", error);
-    return { error: "Couldn't save the image. Check the database connection and try again." };
+    return { error: "Couldn't upload the image. Check the Cloudinary settings and try again." };
+  }
+}
+
+/**
+ * Deletes an image that was uploaded in the form but never saved (the user
+ * picked another one, or removed it). Anything this admin didn't upload is
+ * ignored.
+ */
+export async function discardImage(url: string): Promise<void> {
+  await requireAdmin();
+
+  const publicId = ownedPublicId(url);
+  if (!publicId) return;
+  try {
+    await destroyFromCloudinary(publicId);
+  } catch (error) {
+    console.error("[admin] discarding image failed", error);
   }
 }

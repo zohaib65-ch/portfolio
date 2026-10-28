@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/auth";
 import { skillRepo } from "@/lib/content";
-import { getSkillIcon } from "@/lib/skill-icons";
 import type { SkillItem } from "@/lib/types";
 
 export default async function SkillsListPage() {
@@ -48,7 +47,6 @@ export default async function SkillsListPage() {
       ) : (
         <ul className="divide-y rounded-xl border">
           {items.map((item, index) => {
-            const Icon = getSkillIcon(item.icon);
             return (
               <li
                 key={item.id}
@@ -56,9 +54,7 @@ export default async function SkillsListPage() {
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-8 flex-none items-center justify-center">
-                    {Icon ? (
-                      <Icon className="size-5 overflow-hidden rounded object-contain" />
-                    ) : item.iconUrl ? (
+                    {item.iconUrl ? (
                       <img
                         src={item.iconUrl}
                         alt=""

@@ -19,9 +19,7 @@ export type WorkItem = {
 export type SkillItem = {
   id: string;
   name: string;
-  /** Key into SKILL_ICONS, or "" for none. */
-  icon: string;
-  /** Custom icon image, used when no built-in icon is selected. */
+  /** Icon image URL (an uploaded image), or "" for none. */
   iconUrl: string;
   /** Heading the skill is listed under on the site, e.g. "Frontend". */
   group: string;

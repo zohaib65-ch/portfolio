@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import BlurFade from "@/components/magicui/blur-fade";
-import { getSkillIcon } from "@/lib/skill-icons";
 import type { SkillItem } from "@/lib/types";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -44,16 +43,13 @@ export default function SkillsSection({ skills }: { skills: SkillItem[] }) {
               )}
               <div className="flex flex-wrap gap-2">
                 {items.map((skill, index) => {
-                  const Icon = getSkillIcon(skill.icon);
                   return (
                     <BlurFade
                       key={skill.id}
                       delay={BLUR_FADE_DELAY * 10 + (before + index) * 0.05}
                     >
                       <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
-                        {Icon ? (
-                          <Icon className="size-4 rounded overflow-hidden object-contain" />
-                        ) : skill.iconUrl ? (
+                        {skill.iconUrl ? (
                           <img
                             src={skill.iconUrl}
                             alt=""

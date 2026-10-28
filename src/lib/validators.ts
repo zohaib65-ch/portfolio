@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { SKILL_ICON_KEYS } from "@/lib/skill-icons";
 
 // Anything stored here ends up in an href or src on the public site, so only
 // allow http(s) URLs and site-relative paths. This rules out javascript: and
@@ -45,12 +44,6 @@ export const workSchema = z.object({
 
 export const skillSchema = z.object({
   name: required(60),
-  icon: z
-    .string()
-    .refine(
-      (value) => value === "" || (SKILL_ICON_KEYS as string[]).includes(value),
-      "Unknown icon"
-    ),
   iconUrl: optionalUrl,
   group: text(40),
   visible: z.boolean(),

@@ -2,7 +2,6 @@ import type { Model, Types } from "mongoose";
 import { DATA } from "@/data/resume";
 import { connectDb, isDbConfigured } from "@/lib/db";
 import { isObjectId } from "@/lib/ids";
-import { findSkillIconKey } from "@/lib/skill-icons";
 import type { ProjectItem, SkillGroupOption, SkillItem, WorkItem } from "@/lib/types";
 import {
   Project,
@@ -42,7 +41,6 @@ function toSkill(doc: Lean<SkillDoc>): SkillItem {
   return {
     id: String(doc._id),
     name: doc.name,
-    icon: doc.icon ?? "",
     iconUrl: doc.iconUrl ?? "",
     group: doc.group ?? "",
     visible: doc.visible ?? true,
@@ -88,7 +86,6 @@ function templateWork(): Omit<WorkItem, "id">[] {
 function templateSkills(): Omit<SkillItem, "id">[] {
   return DATA.skills.map((skill) => ({
     name: skill.name,
-    icon: skill.icon ? findSkillIconKey(skill.icon) : "",
     iconUrl: skill.iconUrl ?? "",
     group: skill.group ?? "",
     visible: true,

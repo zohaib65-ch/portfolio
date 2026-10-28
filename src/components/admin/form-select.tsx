@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import {
   Select,
   SelectContent,
@@ -12,8 +11,6 @@ import {
 export type FormSelectOption = {
   value: string;
   label: string;
-  /** Shown beside the label in the list and in the closed dropdown. */
-  icon?: ReactNode;
 };
 
 // Radix doesn't allow an item with an empty value, so "nothing selected" is
@@ -56,10 +53,7 @@ export function FormSelect({
           <SelectItem value={NONE}>{noneLabel}</SelectItem>
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value}>
-              <span className="flex items-center gap-2">
-                {option.icon}
-                {option.label}
-              </span>
+              {option.label}
             </SelectItem>
           ))}
         </SelectContent>

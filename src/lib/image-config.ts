@@ -11,5 +11,5 @@ export const ACCEPTED_IMAGE_TYPES = [
 
 export const IMAGE_ACCEPT_ATTR = ACCEPTED_IMAGE_TYPES.join(",");
 
-/** Uploaded images are served from here. */
+/** Legacy: images stored in MongoDB are served from here. New uploads are Cloudinary URLs. */
 export const IMAGE_URL_PREFIX = "/api/images/";
