@@ -1,8 +1,10 @@
-import { withContentCollections } from "@content-collections/next";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // Admin image uploads go through a server action (2 MB limit enforced there).
+    serverActions: { bodySizeLimit: "3mb" },
+  },
   async headers() {
     return [
       {
@@ -30,5 +32,4 @@ const nextConfig = {
   },
 };
 
-// withContentCollections must be the outermost plugin
-export default withContentCollections(nextConfig);
+export default nextConfig;

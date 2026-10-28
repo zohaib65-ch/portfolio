@@ -86,8 +86,8 @@ function templateWork(): Omit<WorkItem, "id">[] {
 function templateSkills(): Omit<SkillItem, "id">[] {
   return DATA.skills.map((skill) => ({
     name: skill.name,
-    icon: findSkillIconKey(skill.icon),
-    iconUrl: "",
+    icon: skill.icon ? findSkillIconKey(skill.icon) : "",
+    iconUrl: skill.iconUrl ?? "",
     visible: true,
   }));
 }

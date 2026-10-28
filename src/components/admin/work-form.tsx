@@ -7,6 +7,7 @@ import {
   FormFooter,
   VisibleCheckbox,
 } from "@/components/admin/form-footer";
+import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { FormState } from "@/lib/form-state";
@@ -119,20 +120,12 @@ export function WorkForm({
         </Field>
       </div>
 
-      <Field
-        label="Logo URL"
-        htmlFor="logoUrl"
+      <ImageField
+        name="logoUrl"
+        label="Company logo"
+        initialValue={value("logoUrl")}
         error={errors.logoUrl}
-        hint="A full image URL, or a file in /public such as /atomic.png."
-      >
-        <Input
-          id="logoUrl"
-          name="logoUrl"
-          defaultValue={value("logoUrl")}
-          aria-invalid={invalid("logoUrl")}
-          aria-describedby={errors.logoUrl ? "logoUrl-error" : undefined}
-        />
-      </Field>
+      />
 
       <Field label="Description" htmlFor="description" error={errors.description}>
         <Textarea

@@ -8,6 +8,7 @@ import {
   FormFooter,
   VisibleCheckbox,
 } from "@/components/admin/form-footer";
+import { ImageField } from "@/components/admin/image-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -211,36 +212,28 @@ export function ProjectForm({
         </div>
       </fieldset>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field
-          label="Image URL"
-          htmlFor="image"
-          error={errors.image}
-          hint="Full URL, or a file in /public."
-        >
-          <Input
-            id="image"
-            name="image"
-            defaultValue={value("image")}
-            aria-invalid={Boolean(errors.image) || undefined}
-            aria-describedby={errors.image ? "image-error" : undefined}
-          />
-        </Field>
-        <Field
-          label="Video URL"
-          htmlFor="video"
-          error={errors.video}
-          hint="An .mp4 link. Replaces the image when set."
-        >
-          <Input
-            id="video"
-            name="video"
-            defaultValue={value("video")}
-            aria-invalid={Boolean(errors.video) || undefined}
-            aria-describedby={errors.video ? "video-error" : undefined}
-          />
-        </Field>
-      </div>
+      <ImageField
+        name="image"
+        label="Project image"
+        shape="wide"
+        initialValue={value("image")}
+        error={errors.image}
+      />
+
+      <Field
+        label="Video URL"
+        htmlFor="video"
+        error={errors.video}
+        hint="Optional. An .mp4 link. When set, it replaces the image on the card."
+      >
+        <Input
+          id="video"
+          name="video"
+          defaultValue={value("video")}
+          aria-invalid={Boolean(errors.video) || undefined}
+          aria-describedby={errors.video ? "video-error" : undefined}
+        />
+      </Field>
 
       <VisibleCheckbox defaultChecked={visible} />
       <FormFooter

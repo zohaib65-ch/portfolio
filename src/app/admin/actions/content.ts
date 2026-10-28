@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import { connectDb } from "@/lib/db";
 import type { ActionResult, FormState } from "@/lib/form-state";
 import { isObjectId } from "@/lib/ids";
+import { confirmImages, deleteImages } from "@/lib/images";
 import type { ResourceKey } from "@/lib/types";
 import {
   fieldErrors,
@@ -37,6 +38,36 @@ async function nextOrder(resource: ResourceKey, place: "top" | "bottom") {
   return place === "top" ? edge.order - 1 : edge.order + 1;
 }
 
+// Fields that hold an image URL, per resource. An uploaded image lives in
+// MongoDB and is referenced as /api/images/<id>.
+const IMAGE_FIELDS: Record<ResourceKey, string[]> = {
+  work: ["logoUrl"],
+  skills: ["iconUrl"],
+  projects: ["image"],
+};
+
+/**
+ * After a save: make this entry's uploads permanent and delete the ones it no
+ * longer uses (replaced or removed). Never fails the save itself.
+ */
+async function syncImages(
+  resource: ResourceKey,
+  before: { get(path: string): unknown } | null,
+  after: Record<string, unknown>
+) {
+  try {
+    const fields = IMAGE_FIELDS[resource];
+    await confirmImages(fields.map((field) => after[field]));
+    await deleteImages(
+      fields
+        .map((field) => before?.get(field))
+        .filter((previous, index) => previous && previous !== after[fields[index]])
+    );
+  } catch (error) {
+    console.error(`[admin] image cleanup for ${resource} failed`, error);
+  }
+}
+
 async function persist(
   resource: ResourceKey,
   id: string | null,
@@ -48,10 +79,12 @@ async function persist(
     const model = getModel(resource);
     if (id) {
       if (!isObjectId(id)) return "Invalid entry.";
-      const updated = await model.findByIdAndUpdate(id, data);
-      if (!updated) return "That entry no longer exists.";
+      const before = await model.findByIdAndUpdate(id, data);
+      if (!before) return "That entry no longer exists.";
+      await syncImages(resource, before, data as Record<string, unknown>);
     } else {
       await model.create({ ...data, order: await nextOrder(resource, place) });
+      await syncImages(resource, null, data as Record<string, unknown>);
     }
     return null;
   } catch (error) {
@@ -240,7 +273,10 @@ export async function deleteItem(
 
   try {
     await connectDb();
-    await getModel(resource).findByIdAndDelete(id);
+    const removed = await getModel(resource).findByIdAndDelete(id);
+    if (removed) {
+      await deleteImages(IMAGE_FIELDS[resource].map((field) => removed.get(field)));
+    }
   } catch (error) {
     console.error(`[admin] deleting ${resource} failed`, error);
     return { error: "Couldn't delete. Try again." };

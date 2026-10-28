@@ -10,7 +10,6 @@ Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://
 
 - Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
 - Built using Next.js 14, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog
 - Responsive for different devices
 - Optimized for Next.js and Vercel
 
@@ -46,7 +45,7 @@ Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://
 
 Work experience, skills and projects are managed at `/admin` and stored in MongoDB. Admin logins live in the database too (passwords are stored as scrypt hashes), not in env vars.
 
-1. Copy `.env.example` to `.env.local` and set `MONGODB_URI` and `AUTH_SECRET`.
+1. Copy `.env.example` to `.env` (or `.env.local`) and set `MONGODB_URI` and `AUTH_SECRET`.
 2. `pnpm create-admin` prompts for an email and password (hidden input) and creates the admin. Run it again with the same email to reset the password.
 3. `pnpm dev` and sign in at `/admin`.
 
@@ -56,7 +55,7 @@ Notes:
 - Edits show up on the site immediately; direct database edits are picked up within a minute.
 - Deleting an admin from the `admins` collection signs them out straight away.
 - On Vercel, add `MONGODB_URI` and `AUTH_SECRET` to the project and allow Vercel's IPs in Atlas network access.
-- Images aren't uploaded: logos, project images and videos are URLs (or files in `/public`).
+- Logos, project images and skill icons are uploaded from the admin (PNG, JPEG, WEBP or GIF, up to 2 MB) and stored in MongoDB. Project videos are still a link.
 
 # License
 

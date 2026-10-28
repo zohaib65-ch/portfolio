@@ -76,7 +76,7 @@ function askHidden(question: string) {
 
 async function main() {
   if (!process.env.MONGODB_URI) {
-    throw new Error("MONGODB_URI is not set. Add it to .env.local.");
+    throw new Error("MONGODB_URI is not set. Add it to .env or .env.local.");
   }
 
   const email = (readFlag("email") ?? (await ask("Admin email: ")))

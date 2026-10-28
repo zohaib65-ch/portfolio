@@ -148,5 +148,3 @@ vite.config.ts.timestamp-*
 # Turbo Repo
 .turbo
 
-# content-collections generated output
-.content-collections

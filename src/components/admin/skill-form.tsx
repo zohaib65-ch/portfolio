@@ -7,6 +7,7 @@ import {
   FormFooter,
   VisibleCheckbox,
 } from "@/components/admin/form-footer";
+import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import type { FormState } from "@/lib/form-state";
 import { SKILL_ICONS, SKILL_ICON_KEYS } from "@/lib/skill-icons";
@@ -62,20 +63,13 @@ export function SkillForm({
         </select>
       </Field>
 
-      <Field
-        label="Custom icon URL"
-        htmlFor="iconUrl"
-        error={errors.iconUrl}
+      <ImageField
+        name="iconUrl"
+        label="Custom icon"
         hint="Optional. Used when no built-in icon is selected above. A small square image works best."
-      >
-        <Input
-          id="iconUrl"
-          name="iconUrl"
-          defaultValue={value("iconUrl")}
-          aria-invalid={Boolean(errors.iconUrl) || undefined}
-          aria-describedby={errors.iconUrl ? "iconUrl-error" : undefined}
-        />
-      </Field>
+        initialValue={value("iconUrl")}
+        error={errors.iconUrl}
+      />
 
       <VisibleCheckbox defaultChecked={visible} />
       <FormFooter
