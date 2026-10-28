@@ -87,6 +87,8 @@ export const DATA = {
   summary:
     "Full Stack Web Developer with 2.5 years of professional experience building SaaS products, AI tools, automation workflows and production web applications. Experienced in Vue.js, React.js, JavaScript, TypeScript, Node.js, MongoDB, REST APIs, Socket.IO and third-party integrations. Hands-on experience with RAG-based systems, LangChain, LangGraph, AI agents and vector search, with a strong focus on clean architecture, maintainable code and user-friendly product experiences.",
   avatarUrl: "/me.jpg",
+  /** Where the floating "Ask my Twin" button goes. */
+  twinUrl: "https://my-digital-twin-two.vercel.app/",
   skills,
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },

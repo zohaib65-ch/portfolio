@@ -1,3 +1,4 @@
+import { AskTwin } from "@/components/ask-twin";
 import Navbar from "@/components/navbar";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 
@@ -19,6 +20,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         {children}
       </div>
       <Navbar />
+      <AskTwin />
     </>
   );
 }

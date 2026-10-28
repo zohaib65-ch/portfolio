@@ -58,7 +58,7 @@ export default async function Page() {
             <h2 className="text-xl font-bold">About</h2>
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+            <div className="prose prose-sm max-w-full text-pretty font-sans leading-relaxed text-muted-foreground sm:prose-base dark:prose-invert">
               <Markdown>
                 {DATA.summary}
               </Markdown>
