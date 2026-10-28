@@ -1,10 +1,19 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import { ProjectCard } from "@/components/project-card";
-import { DATA } from "@/data/resume";
+import { Icons } from "@/components/icons";
+import type { ProjectItem } from "@/lib/types";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function ProjectsSection() {
+function linkIcon(href: string) {
+    if (href.includes("github.com")) return <Icons.github className="size-3" />;
+    if (href.includes("youtube.com") || href.includes("youtu.be")) {
+        return <Icons.youtube className="size-3" />;
+    }
+    return <Icons.globe className="size-3" />;
+}
+
+export default function ProjectsSection({ projects }: { projects: ProjectItem[] }) {
     return (
         <section id="projects">
             <div className="flex min-h-0 flex-col gap-y-8">
@@ -32,22 +41,26 @@ export default function ProjectsSection() {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto auto-rows-fr">
-                    {DATA.projects.map((project, id) => (
+                    {projects.map((project, id) => (
                         <BlurFade
-                            key={project.title}
+                            key={project.id}
                             delay={BLUR_FADE_DELAY * 12 + id * 0.05}
                             className="h-full"
                         >
                             <ProjectCard
                                 href={project.href}
-                                key={project.title}
+                                key={project.id}
                                 title={project.title}
                                 description={project.description}
                                 dates={project.dates}
                                 tags={project.technologies}
                                 image={project.image}
                                 video={project.video}
-                                links={project.links}
+                                links={project.links.map((link) => ({
+                                    type: link.label,
+                                    href: link.href,
+                                    icon: linkIcon(link.href),
+                                }))}
                             />
                         </BlurFade>
                     ))}

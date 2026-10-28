@@ -2,9 +2,11 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SiteShell } from "@/components/site-shell";
 
 export default function NotFound() {
     return (
+        <SiteShell>
         <div className="min-h-[calc(100vh-12rem)] flex flex-col">
             <div className="flex-1 flex items-center justify-center p-8">
                 <div className="flex flex-col items-center text-center max-w-md relative">
@@ -29,6 +31,7 @@ export default function NotFound() {
                 </div>
             </div>
         </div>
+        </SiteShell>
     );
 }
 
